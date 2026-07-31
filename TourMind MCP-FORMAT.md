@@ -1,4 +1,4 @@
-# TourMind Hotel ToB MCP Product Contract
+# TourMind Hotel MCP Product Contract
 
 This document defines the user-visible connection, Agent workflow, and minimum server capability required by the TourMind Booking Skill. It does not prescribe how the MCP server is implemented or deployed.
 

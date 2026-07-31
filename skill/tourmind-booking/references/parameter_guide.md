@@ -166,7 +166,7 @@ Three location modes are supported:
 |---|---|---|
 | Region | `region_id` | Priced candidates for a city/region |
 | Nearby | `latitude`, `longitude`, `radius_km` | Priced candidates around a coordinate |
-| Keyword | `keyword` | Resolve an exact hotel and its coordinates; does not produce final live prices |
+| Keyword | `keyword` | Resolve a hotel or proxy coordinate; does not produce final live prices |
 
 Pass lowercase MCP values `region`, `nearby`, or `keyword`. The MCP server validates and routes the selected mode.
 

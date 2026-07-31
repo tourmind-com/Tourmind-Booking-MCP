@@ -148,7 +148,7 @@ Use this structure for every multi-hotel result. Default to five selected hotels
 Found {candidate_count} candidate hotels and selected the {selected_count} best matches for your request.
 
 Search center: {region_or_poi}
-Search area: {region_or_radius_and_resolution_note}
+Search area: {region_or_radius_and_proxy_note}
 Stay: {check_in_date} to {check_out_date}, {night_count} nights
 Guests: {adults} adults per room, {room_count} rooms
 Filters and ranking: {hard_constraints_and_sort}

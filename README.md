@@ -1,6 +1,6 @@
-# TourMind Booking MCP Product Packages
+# TourMind Booking MCP Product Package
 
-This repository contains the ToB and ToC product definitions and their user-installable companion Skills for TourMind Booking MCP. It intentionally does not contain MCP server source code, deployment scripts, or runtime-specific implementation.
+This folder contains the product definition and the user-installable companion Skill for TourMind Booking MCP. It intentionally does not contain MCP server source code, deployment scripts, or runtime-specific implementation.
 
 ## Package contents
 
@@ -8,43 +8,24 @@ This repository contains the ToB and ToC product definitions and their user-inst
 Tourmind-Booking-Mcp/
 ├── README.md
 ├── TourMind MCP-FORMAT.md
-├── TourMind MCP-TOC-FORMAT.md
 └── skill/
-    ├── tourmind-booking/
-    │   ├── SKILL.md
-    │   └── references/
-    │       └── parameter_guide.md
-    └── hotel-booking-ai/
+    └── tourmind-booking/
         ├── SKILL.md
         └── references/
             └── parameter_guide.md
 ```
 
-- `skill/tourmind-booking/` is the ToB companion Skill. It connects to `https://api.tourmind.com/mcp/tob`; the MCP connection supplies its bearer credential.
-- `skill/hotel-booking-ai/` is the ToC companion Skill. It connects publicly to `https://api.tourmind.com/mcp/toc`; discovery and rates are public, while order operations use `user_key`.
-- `TourMind MCP-FORMAT.md` defines the ToB connection and capability contract.
-- `TourMind MCP-TOC-FORMAT.md` defines the ToC connection and capability contract.
+- `skill/tourmind-booking/` is distributed to users and defines the Agent's hotel-search, price-query, booking, payment, and update behavior.
+- `TourMind MCP-FORMAT.md` defines the user-facing MCP connection example and the capability contract for the development team.
 
 ## Product model
 
-Both MCP services provide the same hotel discovery, ranking, price verification, booking, display, and order-management capabilities. Their companion Skills intentionally share the same workflow language wherever the product behavior is identical.
+The MCP service provides stable hotel tools. The local Skill defines the current user workflow and can evolve independently as search, ranking, price verification, booking, and display strategies improve.
 
-The variants differ only where the products differ:
-
-| Concern | ToB | ToC |
-|---|---|---|
-| MCP endpoint | `https://api.tourmind.com/mcp/tob` | `https://api.tourmind.com/mcp/toc` |
-| Connection authentication | Bearer credential in MCP headers | Public connection; no headers |
-| Public hotel workflow | Authenticated through the connection | No `user_key` required |
-| Booking/order authentication | MCP connection credential | `user_key` from `user_key.txt` in protected tool arguments |
-| Read-only `web_url` | Returned through the authenticated connection | Optional; requires an already stored `user_key` on search/rate tools |
-
-The local Skills define the current user workflow and can evolve independently from the stable MCP tool surface.
-
-Each installed `SKILL.md` is the single source of truth for its Skill version:
+The installed `SKILL.md` is the single source of truth for the Skill version:
 
 ```markdown
-# <Installed companion Skill>
+# TourMind Booking Skill
 
 **Skill version:** `<current-version>`
 ```
@@ -65,4 +46,4 @@ The Agent calls `check_skill_update` once when the Skill is first used in every 
 
 ## Development handoff
 
-The ToB server must satisfy `TourMind MCP-FORMAT.md`; the ToC server must satisfy `TourMind MCP-TOC-FORMAT.md`. Transport framework, hosting, deployment, internal forwarding, and release infrastructure are development decisions and are outside this package.
+The server implementation only needs to satisfy the product contract in `TourMind MCP-FORMAT.md`. Transport framework, hosting, deployment, internal forwarding, and release infrastructure are development decisions and are outside this package.
