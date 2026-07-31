@@ -4,13 +4,13 @@ This document defines the user-visible connection, Agent workflow, and minimum s
 
 ## User connection
 
-Replace the deployment URL and user credential with production values:
+Use the production endpoint and replace the example user credential:
 
 ```json
 {
   "mcpServers": {
     "tourmind": {
-      "url": "https://YOUR_DEPLOYED_DOMAIN/mcp",
+      "url": "https://api.tourmind.com/mcp/tob",
       "type": "streamableHttp",
       "headers": {
         "Authorization": "Bearer tourmind_mcp_xxx"
