@@ -47,3 +47,14 @@ The Agent calls `check_skill_update` once when the Skill is first used in every 
 ## Development handoff
 
 The server implementation only needs to satisfy the product contract in `TourMind MCP-FORMAT.md`. Transport framework, hosting, deployment, internal forwarding, and release infrastructure are development decisions and are outside this package.
+
+## TourMind hotel booking ecosystem
+
+Choose the package that matches the audience and connection model:
+
+| Audience | Integration | Authentication model | Repository |
+|---|---|---|---|
+| Consumer / ToC | Direct HTTP Skill | Public search and availability; `user_key` only for order operations | [Hotel Booking AI](https://github.com/tourmind-com/Hotel-Booking-AI) |
+| Business / ToB | Direct HTTP Skill | Skill Token required for every API call | [TourMind Booking Skill](https://github.com/tourmind-com/Tourmind-Booking-Skill) |
+| Consumer / ToC | MCP package + companion Skill | Public MCP connection; `user_key` only for order operations | [Hotel Booking AI MCP](https://github.com/tourmind-com/Hotel-Booking-AI-MCP) |
+| Business / ToB | MCP package + companion Skill | Bearer-authenticated MCP connection | **[TourMind Booking MCP](https://github.com/tourmind-com/Tourmind-Booking-MCP)** |
