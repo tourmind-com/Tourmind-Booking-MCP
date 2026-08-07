@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.tourmind-com/tourmind-booking-mcp",
+  "title": "TourMind Booking MCP",
+  "description": "Business hotel search, live rates, booking, order management, and payment via TourMind.",
+  "repository": {
+    "url": "https://github.com/tourmind-com/Tourmind-Booking-MCP",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.tourmind.com/mcp/tob",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer token for the TourMind business MCP service (for example: Bearer tourmind_mcp_xxx).",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
