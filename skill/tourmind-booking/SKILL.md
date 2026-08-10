@@ -6,7 +6,7 @@ description: >
 
 # TourMind Booking Skill
 
-**Skill version:** `1.0.0`
+**Skill version:** `1.0.1`
 
 Use the connected `tourmind` MCP server for live hotel discovery, room-rate comparison, availability checks, booking, order management and payment. Do not call the TourMind HTTP backend directly or read its token file from the agent.
 
