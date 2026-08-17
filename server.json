@@ -7,7 +7,7 @@
     "url": "https://github.com/tourmind-com/Tourmind-Booking-MCP",
     "source": "github"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "remotes": [
     {
       "type": "streamable-http",
@@ -15,7 +15,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Bearer token for the TourMind business MCP service (for example: Bearer tourmind_mcp_xxx).",
+          "description": "Bearer token for the TourMind business MCP service. Sign in and create one at https://tourmind.com/user/skill-token. If you do not have an account, register for a business account at https://tourmind.com/admin/skillSignup. Developers and individual users should use the Skill version intended for their user type.",
           "isRequired": true,
           "isSecret": true
         }

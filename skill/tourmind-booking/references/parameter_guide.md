@@ -58,7 +58,7 @@ No-update response:
   "skill_update": {
     "available": false,
     "display_to_user": false,
-    "latest_version": "1.0.2"
+    "latest_version": "1.0.3"
   }
 }
 ```
@@ -81,7 +81,7 @@ As part of the confirmed Skill update, update the Skill files and the version de
 
 An update-check failure is advisory: continue the hotel workflow, do not repeatedly retry, and mention the failure only when the user explicitly asked about updates.
 
-If a tool reports an authentication or authorization failure, relay its exact recovery instruction and stop until the user reconnects or refreshes the MCP credential.
+If the MCP connection has no credential, or if a tool reports an authentication or authorization failure, stop and show the required access guidance from `SKILL.md`: the user must first sign in, then create a token at `https://tourmind.com/user/skill-token`; users without an account can register a business account at `https://tourmind.com/admin/skillSignup`; developers and individual users should use the TourMind Skill version intended for their user type. Ask the user to configure the token as the MCP Bearer credential and reconnect; never ask them to paste it into the conversation.
 
 ## Date and occupancy rules
 
@@ -370,7 +370,7 @@ Tax and fees:
 
 - In the final booking-confirmation template, state that the TourMind room price is tax included. A small number of countries or regions require hotels to collect city or tourism taxes at check-in; include the required customer notice in that template.
 - Read `hotel.fees.mandatory` for city/resort/on-property charges and show its explicit content separately in every final booking-confirmation template. Do not invent an amount or charging basis.
-- When no explicit mandatory-fee content is returned, write `酒店未返回额外到店费用说明`; do not infer that no fee can ever be collected.
+- When no explicit mandatory-fee content is returned, write `The hotel did not return any additional mandatory fee information.`; do not infer that no fee can ever be collected.
 - Do not add mandatory-fee prose numerically unless the API gives an unambiguous amount and charging basis.
 
 Stripe:
@@ -388,8 +388,8 @@ Before booking, confirm:
 - exact hotel and room product;
 - dates, occupancy and room count;
 - latest checked total/currency, cancellation policy and availability;
-- hotel `checkin.begin_time` and `checkout.time`, or `酒店未提供` if either field is absent;
-- explicit `hotel.fees.mandatory` content, or `酒店未返回额外到店费用说明`;
+- hotel `checkin.begin_time` and `checkout.time`, or `Not provided by the hotel` if either field is absent;
+- explicit `hotel.fees.mandatory` content, or `The hotel did not return any additional mandatory fee information.`;
 - the tax notice and 7×24 TourMind customer-service contact `+86-755 3665 4666`;
 - full legal guest name;
 - mandatory contact email.
@@ -410,7 +410,7 @@ Common order statuses:
 
 | Error/symptom | Required handling |
 |---|---|
-| Authentication/authorization error | Relay the MCP error and ask the user to reconnect or refresh the MCP credential |
+| Missing credential or authentication/authorization error | Display the required sign-in/token/registration guidance from `SKILL.md`; ask the user to configure the MCP Bearer credential and reconnect without pasting it into the conversation |
 | No search candidates | Report the exact constraint set; offer changes without applying them |
 | Candidates but no live products | State that hotels were found but none had matching live rooms |
 | Budget-capped search empty | Optionally probe without budget only to diagnose over-budget inventory |

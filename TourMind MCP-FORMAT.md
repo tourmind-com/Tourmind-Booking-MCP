@@ -22,6 +22,14 @@ Use the production endpoint and replace the example user credential:
 
 The MCP connection contains endpoint and authentication settings only. Do not place the TourMind Booking Skill version in connection headers.
 
+## Get an access token
+
+Sign in to your TourMind account, then visit [Create a Skill Token](https://tourmind.com/user/skill-token) to create the token used by this MCP connection.
+
+If you do not have an account, register for a business account at [Business account registration](https://tourmind.com/admin/skillSignup). Developers and individual users should use the TourMind Skill version intended for their user type instead.
+
+Configure the token in the MCP client's `Authorization` header as `Bearer <token>`, then reconnect. Never paste the token into a chat, prompt, log, screenshot, issue, or other user-visible content.
+
 ## User-visible tools
 
 | Tool | Type | User purpose |
@@ -115,7 +123,7 @@ No-update result:
   "skill_update": {
     "available": false,
     "display_to_user": false,
-    "latest_version": "1.0.2"
+    "latest_version": "1.0.3"
   }
 }
 ```
@@ -157,7 +165,7 @@ The development implementation must:
 - Do not require the nine business tools to receive the Skill version.
 - Reject malformed `current_version` values with a concrete validation error.
 - Allow the release service to change `message` and `release_source_url` without requiring a local MCP connection change.
-- Keep authentication credentials out of tool arguments and user-visible results.
+- Keep authentication credentials out of tool arguments and user-visible results. When a credential is missing or rejected, return recovery guidance that tells the user to sign in and create a token at `https://tourmind.com/user/skill-token`; if the user has no account, register for a business account at `https://tourmind.com/admin/skillSignup`; developers and individual users should use the Skill version intended for their user type.
 - Require explicit user confirmation for booking, cancellation, and payment actions. Booking confirmation must follow presentation of the companion Skill's final booking-confirmation template, including hotel check-in/out times and explicit mandatory at-property fees when returned.
 - Return concrete errors without inventing hotel, room, price, booking, or payment data.
 

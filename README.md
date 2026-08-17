@@ -32,6 +32,14 @@ The installed `SKILL.md` is the single source of truth for the Skill version:
 
 The Agent sends this version as `current_version` only when calling the dedicated `check_skill_update` tool. Hotel search, rate, booking, order, cancellation, and payment tools do not carry a Skill version. Users do not maintain a Skill version in the MCP connection configuration.
 
+## Authentication setup
+
+Sign in to your TourMind account, then visit [Create a Skill Token](https://tourmind.com/user/skill-token) to create the token used by the MCP connection.
+
+If you do not have an account, register for a business account at [Business account registration](https://tourmind.com/admin/skillSignup). Developers and individual users should use the TourMind Skill version intended for their user type instead.
+
+Configure the token as the MCP connection's Bearer credential and reconnect. Never paste the token into a conversation or expose it in prompts, logs, screenshots, commits, or issue reports.
+
 ## User update experience
 
 The Agent calls `check_skill_update` once when the Skill is first used in every new conversation, and again when an existing conversation resumes after at least 24 hours of inactivity. When that tool returns a visible `skill_update`:
@@ -55,6 +63,6 @@ Choose the package that matches the audience and connection model:
 | Audience | Integration | Authentication model | Repository |
 |---|---|---|---|
 | Consumer / ToC | Direct HTTP Skill | Public search and availability; `user_key` only for order operations | [Hotel Booking AI](https://github.com/tourmind-com/Hotel-Booking-AI) |
-| Business / ToB | Direct HTTP Skill | Skill Token required for every API call | [TourMind Booking Skill](https://github.com/tourmind-com/Tourmind-Booking-Skillss) |
+| Business / ToB | Direct HTTP Skill | Skill Token required for every API call | [TourMind Booking Skill](https://github.com/tourmind-com/Tourmind-Booking-Skills) |
 | Consumer / ToC | MCP package + companion Skill | Public MCP connection; `user_key` only for order operations | [Hotel Booking AI MCP](https://github.com/tourmind-com/Hotel-Booking-AI-MCP) |
 | Business / ToB | MCP package + companion Skill | Bearer-authenticated MCP connection | **[TourMind Booking MCP](https://github.com/tourmind-com/Tourmind-Booking-MCP)** |
