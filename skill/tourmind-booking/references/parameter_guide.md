@@ -24,6 +24,7 @@ Use this reference when building TourMind requests, resolving POIs, selecting ca
 - Send `region_id` and `hotel_id` as strings.
 - Success: `{"ok": true, "data": {...}}`
 - Failure: `{"ok": false, "error": "error description"}`
+- User-visible language: every English phrase in this reference is canonical source text. Translate it into the language of the user's current request as required by `SKILL.md`. Preserve exact MCP tool names, API field names, enum/code values, identifiers, URLs, currencies, variables, Markdown structure, and the meaning of returned data; translate user-facing summaries without altering facts.
 
 Call `check_skill_update` on the first use of this Skill in every new conversation and when an existing conversation resumes after at least 24 hours of inactivity. Do not call it before every business tool. Request:
 
@@ -58,7 +59,7 @@ No-update response:
   "skill_update": {
     "available": false,
     "display_to_user": false,
-    "latest_version": "1.0.3"
+    "latest_version": "1.0.5"
   }
 }
 ```
@@ -81,7 +82,7 @@ As part of the confirmed Skill update, update the Skill files and the version de
 
 An update-check failure is advisory: continue the hotel workflow, do not repeatedly retry, and mention the failure only when the user explicitly asked about updates.
 
-If the MCP connection has no credential, or if a tool reports an authentication or authorization failure, stop and show the required access guidance from `SKILL.md`: the user must first sign in, then create a token at `https://tourmind.com/user/skill-token`; users without an account can register a business account at `https://tourmind.com/admin/skillSignup`; developers and individual users should use the TourMind Skill version intended for their user type. Ask the user to configure the token as the MCP Bearer credential and reconnect; never ask them to paste it into the conversation.
+If the MCP connection has no credential, or if a tool reports an authentication or authorization failure, stop and show the required access guidance from `SKILL.md` in the user's language: the user must first sign in, then create a token at `https://tourmind.com/user/skill-token`; users without an account can register a business account at `https://tourmind.com/admin/skillSignup`; developers and individual users should use the TourMind Skill version intended for their user type. Preserve both URLs. Ask the user to configure the token as the MCP Bearer credential and reconnect; never ask them to paste it into the conversation.
 
 ## Date and occupancy rules
 
@@ -258,9 +259,9 @@ Each product represents a room/occupancy/meal/cancellation combination and conta
 
 Use only products whose occupancy and other hard requirements match the user. A non-empty product with `is_on_request=true` is a request/confirmation product, not immediate inventory; label it clearly.
 
-Do not map numeric/string `meal_type` codes to breakfast, dinner or another meal without a documented mapping. `meal_count=0` may be shown as no included meal; when positive but the type is unknown, say `Meal included for {meal_count} guests; type not specified`.
+Do not map numeric/string `meal_type` codes to breakfast, dinner or another meal without a documented mapping. `meal_count=0` may be shown as no included meal; when positive but the type is unknown, use the localized equivalent of `Meal included for {meal_count} guests; type not specified`.
 
-The response also includes top-level `web_url`, `web_url_expires_at` and `web_url_one_time`. The link can be opened repeatedly until `web_url_expires_at`. The linked TourMind page displays the hotel and returned room quotes in read-only mode. Preserve it with that exact hotel and show it directly below the hotel's hero image as `[View hotel details]`; never show the original image URL as a separate link or substitute the hotel-list `search_hotels.web_url`. It does not support verification, booking, payment, `/book/*`, order management, finance or account management. Use the authenticated TourMind MCP tools in the AI conversation for those actions. If the field is unexpectedly absent, omit the hotel-detail link rather than constructing one.
+The response also includes top-level `web_url`, `web_url_expires_at` and `web_url_one_time`. The link can be opened repeatedly until `web_url_expires_at`. The linked TourMind page displays the hotel and returned room quotes in read-only mode. Preserve it with that exact hotel and show it directly below the hotel's hero image using the localized label equivalent of `[View hotel details]`; preserve the exact URL, never show the original image URL as a separate link, and never substitute the hotel-list `search_hotels.web_url`. It does not support verification, booking, payment, `/book/*`, order management, finance or account management. Use the authenticated TourMind MCP tools in the AI conversation for those actions. If the field is unexpectedly absent, omit the hotel-detail link rather than constructing one.
 
 ### MCP tool `check_room_availability`
 
@@ -315,7 +316,7 @@ Use all candidates needed for a fair top-five choice; do not merely display the 
 2. Query live rates for remaining candidates in controlled batches.
 3. Filter products by occupancy, room count, strict budget, requested room/meal and other hard fields.
 4. Drop candidates with no matching live product only from the recommendation pool; retain their identifiers and `no matching live product` status in the original pool.
-5. Treat `is_on_request=true` as supplier-confirmation inventory, not immediate availability. Exclude it when the user explicitly requires immediately bookable or real-time available inventory; otherwise rank it after `is_on_request=false` and label it `Inventory requires supplier confirmation`.
+5. Treat `is_on_request=true` as supplier-confirmation inventory, not immediate availability. Exclude it when the user explicitly requires immediately bookable or real-time available inventory; otherwise rank it after `is_on_request=false` and use the localized label equivalent of `Inventory requires supplier confirmation`.
 6. Resolve required facilities through hotel details when needed.
 7. Apply the user's explicit sort first.
 8. Default tie-break order: number/strength of verified preference matches, immediate bookability, distance, live stay total, cancellation flexibility.
@@ -328,7 +329,7 @@ Generate each `Why it matches` statement from evidence that affected ranking. Go
 - `Meets the five-star requirement and has a verified pool`
 - `Offers the requested twin room with free cancellation through November 1`
 
-Do not use generic praise or cached price. If the user asks to view all returned results, show the complete original candidate pool, split into `Meets all hard constraints` and `Does not meet all hard constraints` sections, and state every exclusion reason for each non-match. Verify each additional hotel's live rate before quoting it and fetch static details needed by the same output template. A candidate with no matching live product must remain in the complete-pool view, but its price must read `No matching live room or quote`; never present it as a match or substitute cached `min_price`.
+Do not use generic praise or cached price. If the user asks to view all returned results, show the complete original candidate pool, split into localized equivalents of `Meets all hard constraints` and `Does not meet all hard constraints`, and state every exclusion reason for each non-match. Verify each additional hotel's live rate before quoting it and fetch static details needed by the same output template. A candidate with no matching live product must remain in the complete-pool view, but its price must use the localized equivalent of `No matching live room or quote`; never present it as a match or substitute cached `min_price`.
 
 ## Display field mappings
 
@@ -356,7 +357,7 @@ Room image priority:
 3. generic room gallery with an explicit non-correspondence label
 4. no image message
 
-Use `name_cn` when non-empty, otherwise `name`. Render an empty/`Others` name as `Other / room assigned at check-in`. Show bed, maximum occupancy, conservative meal text, per-night price, total price, cancellation and `is_on_request` status together.
+For a Chinese response, use `name_cn` when non-empty; otherwise use `name`. For other response languages, use `name` when non-empty and fall back to `name_cn`. Render an empty/`Others` name using the localized equivalent of `Other / room assigned at check-in`. Show bed, maximum occupancy, conservative meal text, per-night price, total price, cancellation and `is_on_request` status together.
 
 ## Cancellation, tax and payment semantics
 
@@ -370,7 +371,7 @@ Tax and fees:
 
 - In the final booking-confirmation template, state that the TourMind room price is tax included. A small number of countries or regions require hotels to collect city or tourism taxes at check-in; include the required customer notice in that template.
 - Read `hotel.fees.mandatory` for city/resort/on-property charges and show its explicit content separately in every final booking-confirmation template. Do not invent an amount or charging basis.
-- When no explicit mandatory-fee content is returned, write `The hotel did not return any additional mandatory fee information.`; do not infer that no fee can ever be collected.
+- When no explicit mandatory-fee content is returned, write the localized equivalent of `The hotel did not return any additional mandatory fee information.`; do not infer that no fee can ever be collected.
 - Do not add mandatory-fee prose numerically unless the API gives an unambiguous amount and charging basis.
 
 Stripe:
@@ -388,8 +389,8 @@ Before booking, confirm:
 - exact hotel and room product;
 - dates, occupancy and room count;
 - latest checked total/currency, cancellation policy and availability;
-- hotel `checkin.begin_time` and `checkout.time`, or `Not provided by the hotel` if either field is absent;
-- explicit `hotel.fees.mandatory` content, or `The hotel did not return any additional mandatory fee information.`;
+- hotel `checkin.begin_time` and `checkout.time`, or the localized equivalent of `Not provided by the hotel` if either field is absent;
+- explicit `hotel.fees.mandatory` content, or the localized equivalent of `The hotel did not return any additional mandatory fee information.`;
 - the tax notice and 7×24 TourMind customer-service contact `+86-755 3665 4666`;
 - full legal guest name;
 - mandatory contact email.
