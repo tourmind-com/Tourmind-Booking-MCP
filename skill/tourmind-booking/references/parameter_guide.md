@@ -395,7 +395,7 @@ The response may include `status`, `cancel_fee`, `refund_amount` and `currency`.
 
 Request: `agent_ref_id`, public `payment_method` value `Stripe`, `WeChat Pay`, or `Alipay`, and `user_confirmed=true`. For Stripe, also send `stripe_fee_acknowledged=true` only after the user accepts the displayed 3.5% fee.
 
-There is no custom return URL. Return `pay_url` to the user. For Stripe, also show the returned order amount, 3.5% fee and estimated payable amount before starting payment.
+There is no custom return URL. Return `pay_url` to the user. For Stripe, also show the returned order amount, 3.5% fee and estimated payable amount before starting payment. Disclose that once charged, the Stripe processing fee is non-refundable even if the booking is later cancelled within the hotel's free-cancellation period, and obtain the user's explicit acknowledgement before calling `pay_order`.
 
 ## Candidate verification and ranking
 
@@ -476,8 +476,9 @@ Tax and fees:
 Stripe:
 
 - The 3.5% fee is Stripe payment processing, not room rate, hotel tax or a TourMind booking surcharge.
-- Show it only when Stripe is being considered or selected.
+- Show it only when Stripe is being considered or selected. Before starting payment, disclose that once charged, this processing fee is non-refundable, including when the booking is later cancelled within the hotel's free-cancellation period, and obtain the user's explicit acknowledgement.
 - Use returned `fee_amount` and `payable_amount`; do not recompute when values are available.
+- Before cancelling an order paid through Stripe, explain that the eligible room-charge refund follows the hotel's cancellation policy but the charged Stripe processing fee will not be refunded, even during the free-cancellation period. Obtain explicit cancellation confirmation after this disclosure.
 
 ## Booking and order rules
 
