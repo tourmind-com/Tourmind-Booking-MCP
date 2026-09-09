@@ -20,17 +20,21 @@ Tourmind-Booking-Mcp/
 
 ## Product model
 
-The MCP service provides stable hotel tools. The local Skill defines the current user workflow and can evolve independently as search, ranking, price verification, booking, and display strategies improve.
+The MCP service provides stable enterprise hotel tools, including `batch_query_room_rates` for partial-success live-rate retrieval across up to 20 hotels. Search, single/batch rate, availability, and booking tools support repeated per-room adult/child occupancy. The local Skill defines the current user workflow and can evolve independently as search, ranking, price verification, booking, and display strategies improve.
 
-The installed `SKILL.md` is the single source of truth for the Skill version:
+Hotel-list and hotel-detail tools may return a read-only `data.web_url`. The companion Skill localizes the returned page to Chinese, English, Japanese, Korean, Spanish, or Arabic according to the user's language while preserving the complete access ticket; unsupported languages fall back to English.
 
-```markdown
-# TourMind Booking Skill
+## Skill version and updates
 
-**Skill version:** `<current-version>`
+The installed `SKILL.md` frontmatter is the single source of truth for the Skill version:
+
+```yaml
+metadata:
+  author: TourMind
+  version: "<current-version>"
 ```
 
-The Agent sends this version as `current_version` only when calling the dedicated `check_skill_update` tool. Hotel search, rate, booking, order, cancellation, and payment tools do not carry a Skill version. Users do not maintain a Skill version in the MCP connection configuration.
+The Agent sends `metadata.version` only to `check_skill_update` when an update check is due. Hotel and order tools never receive a Skill version, and users never maintain it in the MCP connection configuration.
 
 ## Authentication setup
 
@@ -48,13 +52,13 @@ The Agent calls `check_skill_update` once when the Skill is first used in every 
 2. Show the release message and explain that updating is recommended for TourMind's latest hotel-search and price-query strategy because older endpoints may become unavailable.
 3. Offer to update from the official sources listed by `release_source_url`.
 4. Obtain confirmation before changing local Skill files.
-5. Update the Skill and its version declaration together.
-6. Validate that the installed version matches `latest_version`.
+5. Update the Skill and frontmatter `metadata.version` together.
+6. Validate that the installed `metadata.version` matches `latest_version`.
 7. Use the new version in the next scheduled update check without asking the user to edit the MCP connection.
 
 ## Development handoff
 
-The server implementation only needs to satisfy the product contract in `TourMind MCP-FORMAT.md`. Transport framework, hosting, deployment, internal forwarding, and release infrastructure are development decisions and are outside this package.
+The server implementation must satisfy `TourMind MCP-FORMAT.md`, including all eleven tools referenced by the companion Skill. Transport framework, hosting, deployment, internal forwarding, and release infrastructure are development decisions and are outside this package.
 
 ## TourMind hotel booking ecosystem
 
