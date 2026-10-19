@@ -67,6 +67,14 @@ query_booking / cancel_booking
 
 The Agent must send `search_hotels.lowest_price` and `highest_price` as CNY totals for the entire stay across all requested rooms, never as nightly values. It must not quote `search_hotels.min_price` as a live bookable price. For multiple candidates it uses `batch_query_room_rates`, with no more than 20 hotel IDs per call and no more than three concurrent batch calls; it uses `query_room_rates` when only one hotel needs rates. It must use the latest `check_room_availability` result when creating a booking. Search, live-rate, availability, and booking tools share the repeated per-room occupancy fields `adults`, `children`, `children_ages`, and `room_count`. Before `create_booking`, the Agent must present the companion Skill's final booking-confirmation template and receive explicit confirmation. The template includes per-room adult/child occupancy, children's ages, check-in/out times from `get_hotel_detail`, any explicit `hotel.fees.mandatory` disclosure, the tax notice and the 7×24 customer-service contact.
 
+## Meal and capacity field semantics
+
+For `query_room_rates`, every successful `batch_query_room_rates` item, and returned `check_room_availability` fields:
+
+- Decode numeric or string `meal_type` values using the complete [1–19 meal mapping](skill/tourmind-booking/references/parameter_guide.md#meal-type-mapping). Type 2 is breakfast included for the booked guests; type 4 is two breakfasts. `meal_count` is supplementary and must not override a known meal type, including when it is zero. Type 17 retains the current code's buffet description.
+- Interpret `maxOccupancy` / `max_occupancy` as the maximum adults per room and a returned `maxChildren` / `max_children` as the additional child limit. Compare adults and children separately. `maxOccupancy=2, maxChildren=1` supports 2 adults plus 1 child per room, subject to the product's child-age conditions and final availability check. See [adult and child capacity](skill/tourmind-booking/references/parameter_guide.md#adult-and-child-capacity).
+- Preserve the same per-room `adults`, `children`, `children_ages`, and `room_count` through rate retrieval, availability checking, and booking. Display adult and child capacity separately.
+
 ## Result-page URL language handoff
 
 Hotel-list and hotel-detail tools may return `data.web_url` with the default locale path `/zh-CN/skills/access`. Before showing the link, the companion Skill selects the locale from the user's current request language or explicitly requested response language: Chinese `zh-CN`, English `en-US`, Japanese `ja`, Korean `ko`, Spanish `es`, Arabic `ar`, and `en-US` for every other language.
